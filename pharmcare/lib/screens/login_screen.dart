@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -8,19 +9,29 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
-  void _login() {
-    String email = _emailController.text.trim();
-    String password = _passwordController.text.trim();
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
-    if (email == "11@ok.com" && password == "11") {
-      Navigator.pushReplacementNamed(context, '/dashboard');
-    } else {
+  Future<void> _createUser() async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Invalid Credentials")),
+        SnackBar(content: Text("Account created successfully!")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: ${e.toString()}")),
       );
     }
   }
@@ -35,56 +46,52 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.local_pharmacy, size: 80, color: Colors.green.shade700),
+              Icon(Icons.local_pharmacy,
+                  size: 80, color: Colors.green.shade700),
               SizedBox(height: 20),
-              Text("PharmCare", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+              Text("PharmCare",
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
               SizedBox(height: 40),
-
               TextField(
-                controller: _emailController,
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: "Email",
                   prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
               SizedBox(height: 16),
-
               TextField(
-                controller: _passwordController,
+                controller: passwordController,
                 obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
                   labelText: "Password",
                   prefixIcon: Icon(Icons.lock),
                   suffixIcon: IconButton(
-                    icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+                    icon: Icon(_isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off),
                     onPressed: () {
                       setState(() {
                         _isPasswordVisible = !_isPasswordVisible;
                       });
                     },
                   ),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
                 ),
               ),
               SizedBox(height: 20),
-
               ElevatedButton(
-                onPressed: _login,
+                onPressed: _createUser,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 14),
                 ),
-                child: Text("Login", style: TextStyle(fontSize: 18, color: Colors.white)),
-              ),
-              SizedBox(height: 16),
-
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/signup');
-                },
-                child: Text("Don't have an account? Sign Up"),
+                child: Text("Sign Up",
+                    style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ],
           ),

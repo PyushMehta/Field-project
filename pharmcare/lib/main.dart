@@ -7,8 +7,15 @@ import 'screens/dashboard_screen.dart';
 import 'screens/inventory_screen.dart';
 import 'screens/signup_screen.dart';
 import 'package:pharmcare/services/notification_service.dart'; // ✅ Correct import
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 
 void main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
+  
   WidgetsFlutterBinding
       .ensureInitialized(); // ✅ Required for async operations before runApp
   NotificationService.initialize(); // ✅ Initialize Notifications
