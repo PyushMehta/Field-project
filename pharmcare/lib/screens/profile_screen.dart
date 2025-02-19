@@ -3,7 +3,6 @@ import 'dart:io'; // File for mobile images
 import 'package:flutter/foundation.dart'; // kIsWeb check
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_web/image_picker_web.dart'; // Web picker
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/user_provider.dart';
@@ -184,15 +183,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   /// 📸 **Image Picker (Supports Web & Mobile)**
 Future<void> _pickImage() async {
   var userProvider = Provider.of<UserProvider>(context, listen: false);
-
-  if (kIsWeb) {
-    Uint8List? bytes = await ImagePickerWeb.getImageAsBytes();
-    if (bytes != null) {
+  
+  final picker = ImagePicker();
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  
+  if (pickedFile != null) {
+    if (kIsWeb) {
+      // Convert to Uint8List for web
+      var bytes = await pickedFile.readAsBytes();
       userProvider.updateProfileImage(imageBytes: bytes);
-    }
-  } else {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
+    } else {
+      // Use File for mobile
       userProvider.updateProfileImage(imageFile: File(pickedFile.path));
     }
   }
