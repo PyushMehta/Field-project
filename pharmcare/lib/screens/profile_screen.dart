@@ -1,4 +1,4 @@
-import 'dart:typed_data'; // Uint8List for web images
+// Uint8List for web images
 import 'dart:io'; // File for mobile images
 import 'package:flutter/foundation.dart'; // kIsWeb check
 import 'package:flutter/material.dart';

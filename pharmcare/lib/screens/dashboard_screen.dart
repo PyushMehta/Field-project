@@ -7,6 +7,8 @@ import 'package:pharmcare/screens/profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:pharmcare/providers/user_provider.dart'; // Import your provider file
 import 'package:flutter/foundation.dart';
+import 'package:pharmcare/screens/restock_list_screen.dart';
+
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -156,138 +158,188 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildStockAlertsSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Stock Alerts",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            MedicineAlertsScreen(initialTab: 0)),
-                  );
-                },
-                child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  color: Colors.red,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
+Widget _buildStockAlertsSection(BuildContext context) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text("Stock Alerts",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      SizedBox(height: 10),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Expired Medicines
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MedicineAlertsScreen(initialTab: 0)),
+                );
+              },
+              child: Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                color: Colors.red,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Icon(Icons.cancel, color: Colors.white, size: 30),
+                      SizedBox(height: 8),
+                      Text("Expired",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)),
+                      SizedBox(height: 5),
+                      Text("3 Items",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 10),
+
+          // Near Expiry Medicines
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MedicineAlertsScreen(initialTab: 1)),
+                );
+              },
+              child: Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                color: Colors.orange,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Icon(Icons.warning, color: Colors.white, size: 30),
+                      SizedBox(height: 8),
+                      Text("Near Expiry",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)),
+                      SizedBox(height: 5),
+                      Text("5 Items",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 10),
+
+          // Low Stock Medicines
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MedicineAlertsScreen(initialTab: 2)),
+                );
+              },
+              child: Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                color: Colors.purple,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Icon(Icons.warning_amber, color: Colors.white, size: 30),
+                      SizedBox(height: 8),
+                      Text("Low Stock",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)),
+                      SizedBox(height: 5),
+                      Text("7 Items",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 10),
+
+      // Restock List
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RestockListScreen()),
+          );
+        },
+        child: Card(
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12)),
+          color: Colors.teal,
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.inventory, color: Colors.white, size: 30),
+                    SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.cancel, color: Colors.white, size: 30),
-                        SizedBox(height: 8),
-                        Text("Expired",
+                        Text("Restock List",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold)),
                         SizedBox(height: 5),
-                        Text("3 Items",
+                        Text("4 Items",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold)),
                       ],
                     ),
-                  ),
+                  ],
                 ),
-              ),
+                Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20),
+              ],
             ),
-            SizedBox(width: 10),
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            MedicineAlertsScreen(initialTab: 1)),
-                  );
-                },
-                child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  color: Colors.orange,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        Icon(Icons.warning, color: Colors.white, size: 30),
-                        SizedBox(height: 8),
-                        Text("Near Expiry",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold)),
-                        SizedBox(height: 5),
-                        Text("5 Items",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            MedicineAlertsScreen(initialTab: 2)),
-                  );
-                },
-                child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  color: Colors.purple,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        Icon(Icons.warning_amber,
-                            color: Colors.white, size: 30),
-                        SizedBox(height: 8),
-                        Text("Low Stock",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold)),
-                        SizedBox(height: 5),
-                        Text("7 Items",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
+
 
   // Revenue & Profit Graph
   Widget _buildRevenueProfitGraph() {
