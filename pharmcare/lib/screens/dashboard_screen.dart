@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:pharmcare/screens/login_screen.dart';
+import 'package:pharmcare/screens/signup_screen.dart';
 import 'inventory_screen.dart';
 import 'package:pharmcare/screens/medicine_alerts_screen.dart';
 import 'package:pharmcare/screens/profile_screen.dart';
@@ -100,7 +100,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }),
           _buildDrawerItem(Icons.logout, "Logout", () {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => LoginScreen()));
+                MaterialPageRoute(builder: (context) => SignupScreen()));
           }),
         ],
       ),

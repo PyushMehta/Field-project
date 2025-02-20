@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/user_provider.dart';
-import '../screens/login_screen.dart';
+import 'signup_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -48,50 +48,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   /// 🖼️ **Profile Picture Section**
- Widget _buildProfilePictureSection() {
-  var userProvider = Provider.of<UserProvider>(context);
+  Widget _buildProfilePictureSection() {
+    var userProvider = Provider.of<UserProvider>(context);
 
-  return Center(
-    child: Column(
-      children: [
-        CircleAvatar(
-          radius: 50,
-          backgroundColor: Colors.grey.shade300,
-          backgroundImage: kIsWeb
-              ? (userProvider.profileImageBytes != null ? MemoryImage(userProvider.profileImageBytes!) : null)
-              : (userProvider.profileImageFile != null ? FileImage(userProvider.profileImageFile!) : null),
-          child: (userProvider.profileImageBytes == null && userProvider.profileImageFile == null)
-              ? Icon(Icons.person, size: 50, color: Colors.grey)
-              : null,
-        ),
-        SizedBox(height: 10),
-        TextButton.icon(
-          onPressed: _pickImage,
-          icon: Icon(Icons.camera_alt, color: Colors.green),
-          label: Text("Change Profile Picture", style: TextStyle(color: Colors.green)),
-        ),
-      ],
-    ),
-  );
-}
-
-
+    return Center(
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 50,
+            backgroundColor: Colors.grey.shade300,
+            backgroundImage: kIsWeb
+                ? (userProvider.profileImageBytes != null
+                    ? MemoryImage(userProvider.profileImageBytes!)
+                    : null)
+                : (userProvider.profileImageFile != null
+                    ? FileImage(userProvider.profileImageFile!)
+                    : null),
+            child: (userProvider.profileImageBytes == null &&
+                    userProvider.profileImageFile == null)
+                ? Icon(Icons.person, size: 50, color: Colors.grey)
+                : null,
+          ),
+          SizedBox(height: 10),
+          TextButton.icon(
+            onPressed: _pickImage,
+            icon: Icon(Icons.camera_alt, color: Colors.green),
+            label: Text("Change Profile Picture",
+                style: TextStyle(color: Colors.green)),
+          ),
+        ],
+      ),
+    );
+  }
 
   /// ℹ️ **User Information**
   Widget _buildUserInfo(UserProvider userProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Full Name", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        Text("Full Name",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         TextField(
           controller: _nameController,
-          decoration: InputDecoration(border: OutlineInputBorder(), hintText: "Enter new name"),
+          decoration: InputDecoration(
+              border: OutlineInputBorder(), hintText: "Enter new name"),
         ),
         SizedBox(height: 10),
         ElevatedButton(
           onPressed: () {
             userProvider.updateUserName(_nameController.text.trim());
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Name updated!")));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("Name updated!")));
           },
           child: Text("Update Name"),
         ),
@@ -118,11 +125,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   /// ⚙️ **Settings: Theme, Font Size, Security**
-  Widget _buildSettings(ThemeProvider themeProvider, UserProvider userProvider) {
+  Widget _buildSettings(
+      ThemeProvider themeProvider, UserProvider userProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Preferences", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text("Preferences",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         SwitchListTile(
           title: Text("Dark Mode"),
           value: themeProvider.isDarkMode,
@@ -146,13 +155,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         Divider(),
-        Text("Security", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text("Security",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ListTile(
           leading: Icon(Icons.lock, color: Colors.green),
           title: Text("Change Password"),
           trailing: Icon(Icons.arrow_forward_ios, size: 16),
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Feature Coming Soon!")));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("Feature Coming Soon!")));
           },
         ),
         ListTile(
@@ -160,7 +171,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: Text("Enable PIN Lock"),
           trailing: Icon(Icons.arrow_forward_ios, size: 16),
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Feature Coming Soon!")));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("Feature Coming Soon!")));
           },
         ),
         Divider(),
@@ -181,25 +193,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   /// 📸 **Image Picker (Supports Web & Mobile)**
-Future<void> _pickImage() async {
-  var userProvider = Provider.of<UserProvider>(context, listen: false);
-  
-  final picker = ImagePicker();
-  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-  
-  if (pickedFile != null) {
-    if (kIsWeb) {
-      // Convert to Uint8List for web
-      var bytes = await pickedFile.readAsBytes();
-      userProvider.updateProfileImage(imageBytes: bytes);
-    } else {
-      // Use File for mobile
-      userProvider.updateProfileImage(imageFile: File(pickedFile.path));
+  Future<void> _pickImage() async {
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      if (kIsWeb) {
+        // Convert to Uint8List for web
+        var bytes = await pickedFile.readAsBytes();
+        userProvider.updateProfileImage(imageBytes: bytes);
+      } else {
+        // Use File for mobile
+        userProvider.updateProfileImage(imageFile: File(pickedFile.path));
+      }
     }
   }
-}
-
-
 
   /// 🚪 **Logout Confirmation Dialog**
   void _confirmLogout(BuildContext context) {
@@ -215,7 +225,10 @@ Future<void> _pickImage() async {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignupScreen()),
+                  (route) => false);
             },
             child: Text("Logout", style: TextStyle(color: Colors.red)),
           ),
