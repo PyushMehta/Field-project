@@ -1,4 +1,3 @@
-// Uint8List for web images
 import 'dart:io'; // File for mobile images
 import 'package:flutter/foundation.dart'; // kIsWeb check
 import 'package:flutter/material.dart';
@@ -25,7 +24,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     var themeProvider = Provider.of<ThemeProvider>(context);
     var userProvider = Provider.of<UserProvider>(context);
-    _nameController.text = userProvider.userName; // Pre-fill with user’s name
+    if (_nameController.text.isEmpty) {
+      _nameController.text = userProvider.userName; // Pre-fill with user’s name
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text("Profile")),
@@ -107,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ListTile(
           leading: Icon(Icons.email, color: Colors.green),
           title: Text("Email"),
-          subtitle: Text("user@example.com"),
+          subtitle: Text(userProvider.userEmail),
         ),
         ListTile(
           leading: Icon(Icons.security, color: Colors.green),

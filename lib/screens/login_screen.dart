@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -40,13 +41,11 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacementNamed(context, '/dashboard');
     } on FirebaseAuthException catch (e) {
       String errorMessage = "Login failed. Please try again.";
-
       if (e.code == 'user-not-found') {
         errorMessage = "No user found with this email.";
       } else if (e.code == 'wrong-password') {
         errorMessage = "Incorrect password.";
       }
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
       );
@@ -60,25 +59,36 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.shade100,
+      backgroundColor: Colors.green.shade50,
       body: Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
+        child: Container(
+          padding: EdgeInsets.all(24),
+          margin: EdgeInsets.symmetric(horizontal: 24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                spreadRadius: 5,
+              ),
+            ],
+          ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Login",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-              SizedBox(height: 40),
+              Text(
+                "Welcome Back",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 24),
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: "Email",
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                  border: OutlineInputBorder(),
                 ),
-                keyboardType: TextInputType.emailAddress,
               ),
               SizedBox(height: 16),
               TextField(
@@ -86,32 +96,51 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
                   labelText: "Password",
-                  prefixIcon: Icon(Icons.lock),
+                  border: OutlineInputBorder(),
                   suffixIcon: IconButton(
-                    icon: Icon(_isPasswordVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off),
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
                     onPressed: () {
                       setState(() {
                         _isPasswordVisible = !_isPasswordVisible;
                       });
                     },
                   ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
                 ),
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _signIn,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 14),
+              SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
+                    );
+                  },
+                  child: Text("Forgot Password?"),
                 ),
-                child: _isLoading
-                    ? CircularProgressIndicator(color: Colors.white)
-                    : Text("Sign In",
-                        style: TextStyle(fontSize: 18, color: Colors.white)),
+              ),
+              SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _signIn,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: _isLoading
+                      ? CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        )
+                      : Text(
+                          "Login",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                ),
               ),
               SizedBox(height: 16),
               TextButton(

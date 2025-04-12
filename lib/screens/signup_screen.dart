@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -12,12 +14,14 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   bool _isPasswordVisible = false;
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 
@@ -27,6 +31,17 @@ class _SignupScreenState extends State<SignupScreen> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+
+      User? user = FirebaseAuth.instance.currentUser;
+      await user?.updateDisplayName(nameController.text.trim());
+      await user?.reload();
+      user = FirebaseAuth.instance.currentUser;
+
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      if (user != null) {
+        userProvider.updateUserName(user.displayName ?? '');
+        userProvider.updateUserEmail(user.email ?? '');
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Account created successfully! Please log in.")),
       );
@@ -44,27 +59,44 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.shade100,
+      backgroundColor: Colors.green.shade50,
       body: Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
+        child: Container(
+          padding: EdgeInsets.all(24),
+          margin: EdgeInsets.symmetric(horizontal: 24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                spreadRadius: 5,
+              ),
+            ],
+          ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.local_pharmacy, size: 80, color: Colors.green.shade700),
-              SizedBox(height: 20),
-              Text("PharmCare",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-              SizedBox(height: 40),
+              Text(
+                "Create Account",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 24),
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: "Full Name",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 16),
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: "Email",
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                  border: OutlineInputBorder(),
                 ),
-                keyboardType: TextInputType.emailAddress,
               ),
               SizedBox(height: 16),
               TextField(
@@ -72,30 +104,33 @@ class _SignupScreenState extends State<SignupScreen> {
                 obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
                   labelText: "Password",
-                  prefixIcon: Icon(Icons.lock),
+                  border: OutlineInputBorder(),
                   suffixIcon: IconButton(
-                    icon: Icon(_isPasswordVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off),
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
                     onPressed: () {
                       setState(() {
                         _isPasswordVisible = !_isPasswordVisible;
                       });
                     },
                   ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
                 ),
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _createUser,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 14),
+              SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _createUser,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: Text(
+                    "Sign Up",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
                 ),
-                child: Text("Sign Up",
-                    style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
               SizedBox(height: 16),
               TextButton(

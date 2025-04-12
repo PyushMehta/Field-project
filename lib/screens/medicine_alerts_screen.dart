@@ -113,7 +113,9 @@ class _MedicineAlertsScreenState extends State<MedicineAlertsScreen> with Single
           child: ListTile(
             leading: Icon(Icons.medication, color: Colors.green),
             title: Text(items[index]["name"] ?? ""),
-            subtitle: Text("$label: ${items[index][label.toLowerCase()]}"),
+            subtitle: items[index][label.toLowerCase()] != null
+                ? Text("$label: ${items[index][label.toLowerCase()]}")
+                : null,
           ),
         );
       },

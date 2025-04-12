@@ -153,6 +153,7 @@
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
+			wrapsLines = 0;
 		};
 		D5EC81F27F5362BE68801D68 /* Pods */ = {
 			isa = PBXGroup;
@@ -164,7 +165,6 @@
 				5EA05A54FA2E97C4E1CBF489 /* Pods-RunnerTests.release.xcconfig */,
 				CD046CBBE2ACA767B00F24D0 /* Pods-RunnerTests.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
