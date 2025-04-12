@@ -22,3 +22,4 @@ yarn-error.log
 # Firebase/Secrets
 .env
 firebase-debug.log
+echo "serviceAccountKey.json" >> .gitignore
