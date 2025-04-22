@@ -1,0 +1,25 @@
+# Flutter
+.dart_tool/
+.packages
+build/
+.idea/
+.flutter-plugins
+.flutter-plugins-dependencies
+.melos_tool/
+pubspec.lock
+
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# VS Code
+.vscode/
+
+# Firebase/Secrets
+.env
+firebase-debug.log
+echo "serviceAccountKey.json" >> .gitignore
